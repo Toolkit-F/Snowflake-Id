@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./public/image.png" alt="Snowflake ID Logo" width="600" />
+  <img src="https://raw.githubusercontent.com/maulik-mk/Snowflake-Id/main/public/image.png" alt="Snowflake ID Logo" width="600" />
 </p>
 
 
