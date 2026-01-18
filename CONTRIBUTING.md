@@ -12,7 +12,7 @@
 1. **Fork** the repo on GitHub.
 2. **Clone** your fork:
     ```bash
-    git clone https://github.com/maulik-mk/Snowflake-Id.git
+    git clone https://github.com/Toolkit-F/Snowflake-Id.git
     cd Snowflake-Id
     ```
 3. **Install dependencies**:

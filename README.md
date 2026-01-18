@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/maulik-mk/Snowflake-Id/main/public/image.png" alt="Snowflake ID Logo" width="600" />
+  <img src="https://raw.githubusercontent.com/Toolkit-F/Snowflake-Id/main/public/image.png" alt="Snowflake ID Logo" width="600" />
 </p>
 
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@toolkit-f/snowflake-id"><img src="https://img.shields.io/npm/v/@toolkit-f/snowflake-id.svg" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/@toolkit-f/snowflake-id"><img src="https://img.shields.io/npm/dm/@toolkit-f/snowflake-id.svg" alt="npm downloads"></a>
-  <a href="https://github.com/maulik-mk/Snowflake-Id/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@toolkit-f/snowflake-id.svg" alt="license"></a>
+  <a href="https://github.com/Toolkit-F/Snowflake-Id/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/@toolkit-f/snowflake-id.svg" alt="license"></a>
   <img src="https://img.shields.io/badge/TypeScript-Ready-blue.svg" alt="TypeScript">
 </p>
 
@@ -617,7 +617,7 @@ try {
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a [Pull Request](https://github.com/maulik-mk/Snowflake-Id/pulls).
+Contributions are welcome! Please feel free to submit a [Pull Request](https://github.com/Toolkit-F/Snowflake-Id/pulls).
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -629,4 +629,4 @@ Contributions are welcome! Please feel free to submit a [Pull Request](https://g
 
 ## 🪪 License
 
-[MIT](https://github.com/maulik-mk/Snowflake-Id/blob/main/LICENSE) © [Maulik M. K.](https://github.com/maulik-mk)
+[MIT](https://github.com/Toolkit-F/Snowflake-Id/blob/main/LICENSE) © [Toolkit-F](https://github.com/Toolkit-F)

@@ -37,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maulik-mk/Snowflake-Id.git"
+    "url": "git+https://github.com/Toolkit-F/Snowflake-Id.git"
   },
   "keywords": [
     "snowflake",
@@ -48,13 +48,13 @@
     "typescript",
     "generator"
   ],
-  "author": "Maulik M. K.",
+  "author": "Toolkit-F",
   "license": "MIT",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/maulik-mk/Snowflake-Id/issues"
+    "url": "https://github.com/Toolkit-F/Snowflake-Id/issues"
   },
-  "homepage": "https://github.com/maulik-mk/Snowflake-Id#readme",
+  "homepage": "https://github.com/Toolkit-F/Snowflake-Id#readme",
   "devDependencies": {
     "@types/node": "^25.0.9",
     "tsup": "^8.5.1",
