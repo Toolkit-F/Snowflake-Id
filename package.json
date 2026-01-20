@@ -33,7 +33,13 @@
     "test:co": "vitest run tests/collision.test.ts",
     "test:ut": "vitest run tests/utils.test.ts",
     "test:watch": "vitest --watch",
-    "test:dist:js": "node tests/dist.js"
+    "test:dist:js": "node tests/dist.js",
+    "lint": "eslint src tests",
+    "lint:fix": "eslint src tests --fix",
+    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "repository": {
     "type": "git",
@@ -48,7 +54,7 @@
     "typescript",
     "generator"
   ],
-  "author": "Toolkit-F",
+  "author": "Maulik M. K. <https://github.com/maulik-mk>",
   "license": "MIT",
   "type": "module",
   "bugs": {
@@ -56,10 +62,16 @@
   },
   "homepage": "https://github.com/Toolkit-F/Snowflake-Id#readme",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@types/node": "^25.0.9",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "prettier": "^3.8.0",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.1",
     "vitest": "^4.0.17"
   }
 }
