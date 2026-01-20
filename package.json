@@ -54,7 +54,10 @@
     "typescript",
     "generator"
   ],
-  "author": "Maulik M. K. <https://github.com/maulik-mk>",
+  "author": {
+    "name": "Toolkit-F",
+    "url": "https://github.com/Toolkit-F"
+  },
   "license": "MIT",
   "type": "module",
   "bugs": {
