@@ -29,6 +29,20 @@ Snowflake IDs are 64-bit unique identifiers. Sortable by time and can be generat
 - Full TypeScript support
 - Parse IDs to extract timestamp, machine ID, and sequence
 
+## Why Snowflake-ID?
+
+| Feature | Snowflake ID | UUID v7 | UUID v4 | Auto Increment |
+|---------|--------------|---------|---------|----------------|
+| **Sortable** | Yes (Time) | Yes (Time) | No | Yes |
+| **Unique** | Distributed | Global | Global | Single DB |
+| **DB Size** | **8 bytes (BigInt)** | 16 bytes (Bytes) | 16 bytes | 4/8 bytes |
+| **Index** | Fast (B-Tree) | Fast (B-Tree) | Slow (Fragmented) | Fast |
+| **Performance** | ~3M ops/sec | ~2M ops/sec | ~5M ops/sec | Database Limit |
+| **Coordination** | None | None | None | Centralized |
+
+> **Perf Check:** This library generates **~3 million IDs per second** on a standard laptop (M1 Air).
+
+
 ---
 
 ## Installation
@@ -97,6 +111,154 @@ const { SnowflakeGenerator } = require('@toolkit-f/snowflake-id');
 const generator = new SnowflakeGenerator({ machineId: 1 });
 console.log(generator.nextIdString());
 ```
+
+---
+
+## Production Guide
+
+### 1. Database Storage & BigInt Warning
+⚠️ **Important:** Always use `.nextIdString()` for databases and APIs. JavaScript's `Number` type cannot safely hold 64-bit **integers**. IDs will lose precision and become incorrect if you cast them to `Number`
+
+```javascript
+// BAD - Precision loss guarantees bugs
+const id = generator.nextId();
+const numericId = Number(id); 
+
+// GOOD - Always treat as string
+const stringId = generator.nextIdString();
+```
+
+#### PostgreSQL
+Use `BIGINT` to store IDs efficiently.
+```sql
+CREATE TABLE users (
+  id BIGINT PRIMARY KEY,
+  username TEXT
+);
+```
+
+```javascript
+// Correct: Pass as string, driver handles BIGINT conversion
+const id = generator.nextIdString();
+await db.query('INSERT INTO users (id, username) VALUES ($1, $2)', [id, 'alice']);
+```
+
+#### MySQL
+Use `BIGINT` (64-bit integer).
+```sql
+CREATE TABLE orders (
+  id BIGINT PRIMARY KEY,
+  amount DECIMAL(10, 2)
+);
+```
+
+#### MongoDB
+Store as `String` to ensure compatibility with all clients.
+```javascript
+const id = generator.nextIdString();
+await collection.insertOne({ _id: id, ... });
+```
+
+### Common Mistakes
+
+| Mistake | Consequence | Fix |
+|---------|-------------|-----|
+| `Number(id)` | **Data Corruption** | Use `String(id)` or `BigInt` |
+| `machineId: 0` everywhere | **ID Collisions** | Unique ID per instance |
+| `Math.random()` for ID | No Sorting | Use Snowflake |
+
+### Framework Integrations
+
+#### NestJS
+```typescript
+// snowflake.provider.ts
+import { Provider } from '@nestjs/common';
+import { SnowflakeGenerator } from '@toolkit-f/snowflake-id';
+
+export const SNOWFLAKE_PROVIDER = 'SNOWFLAKE_GENERATOR';
+
+export const snowflakeProvider: Provider = {
+  provide: SNOWFLAKE_PROVIDER,
+  useFactory: () => {
+    const machineId = parseInt(process.env.MACHINE_ID || '0', 10);
+    return new SnowflakeGenerator({ machineId });
+  },
+};
+```
+
+#### Prisma
+```prisma
+// schema.prisma
+model User {
+  id        BigInt   @id
+  username  String
+}
+```
+*Note: You must generate the ID in code before creating the record.*
+
+#### TypeORM
+```typescript
+@Entity()
+export class User {
+  @PrimaryColumn('bigint')
+  id: string; // TypeORM handles BigInt as string
+}
+```
+
+### 2. Distributed Deployment (machineId)
+To prevent ID collisions, every running instance **must** have a unique `machineId` (0-1023).
+
+#### Kubernetes (StatefulSet)
+Use the collection ordinal from the hostname (e.g., `web-0`, `web-1`).
+```javascript
+const podName = process.env.HOSTNAME || 'web-0';
+const machineId = parseInt(podName.split('-').pop() || '0', 10);
+const generator = new SnowflakeGenerator({ machineId });
+```
+
+#### Docker Swarm / Replicas
+Inject via environment variables:
+```yaml
+services:
+  api:
+    environment:
+      - MACHINE_ID={{.Task.Slot}}
+```
+
+```javascript
+const machineId = parseInt(process.env.MACHINE_ID || '0', 10);
+const generator = new SnowflakeGenerator({ machineId });
+```
+
+#### Auto-scaling Groups
+Options:
+1. **Coordination Service:** Use Redis/etcd to lease machineIds
+2. **Hash-based:** Hash instance ID to 0-1023 range (collision possible)
+3. **Time-based:** Use startup timestamp modulo 1024 (not recommended)
+
+#### Multi-Region
+Partition `machineId` ranges by region:
+
+| Region | machineId Range |
+|--------|----------------|
+| us-east | 0-255 |
+| us-west | 256-511 |
+| eu-west | 512-767 |
+| ap-south | 768-1023 |
+
+### 3. Security Considerations
+⚠️ **Snowflake IDs allow public timestamp decoding.**
+Anyone with the ID can calculate exactly when a record was created.
+
+```javascript
+const { parseSnowflake } = require('@toolkit-f/snowflake-id');
+console.log(parseSnowflake('136941813297545217').timestamp);
+// 2024-01-16T09:09:25.000Z
+```
+
+*   **Do not** use Snowflake IDs if the creation time must remain secret.
+*   **Do not** trust the timestamp for security verification (it can be spoofed by the client if they generate IDs).
+*   Consider using a separate random slug (e.g., UUID or NanoID) for public-facing URLs if business metrics (like order volume) need to be hidden.
 
 ---
 
