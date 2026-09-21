@@ -1,6 +1,6 @@
 # Contributing to Snowflake-ID
 
-❤️ Thanks for wanting to contribute!
+Thanks for wanting to contribute!
 
 ## Getting Started
 
@@ -33,17 +33,38 @@ We use a **Feature Branch** workflow. The `main` branch is protected.
 
 2. **Make your changes** — write clean TypeScript.
 
-3. **Run tests** before committing (we use Vitest):
+3. **Run tests** before committing:
     ```bash
-    npm test
-    npx vitest  # watch mode
+    npm test                   # unit + integration (CI default)
+    npm run test:collision     # collision and stress tests
+    npm run test:benchmark     # performance benchmarks
+    npm run test:all           # everything
     ```
     Don't break existing tests. Add tests for new features.
 
-4. **Build** to check for errors:
+4. **Check code quality**:
+    ```bash
+    npm run lint               # eslint
+    npm run typecheck          # tsc --noEmit
+    npm run format:check       # prettier
+    ```
+
+5. **Build** to check for errors:
     ```bash
     npm run build
     ```
+
+### Available Test Commands
+
+| Command | What it runs |
+|---------|-------------|
+| `npm test` | Unit + integration tests (165 tests) |
+| `npm run test:unit` | Unit tests only (132 tests) |
+| `npm run test:integration` | Integration tests only (33 tests) |
+| `npm run test:collision` | Collision, clock drift, parallel execution (44 tests) |
+| `npm run test:benchmark` | Throughput, memory, encoding benchmarks (30 tests) |
+| `npm run test:all` | All tests (239 tests) |
+| `npm run test:watch` | Watch mode |
 
 ## Commit Guidelines
 
@@ -83,4 +104,4 @@ Open an issue with:
 Got an idea? Open an issue first so we can discuss it before you start coding.
 
 ---
-Happy Coding! ❄️
+Happy coding!
